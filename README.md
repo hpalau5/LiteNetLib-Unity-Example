@@ -51,3 +51,16 @@
      * https://eddieabbondanz.io/post/unity/litenetlib-sending-data/
      * 
      *
+
+Solo se pueden enviar datos basicos, para enviar clases o Vector3 tendremos que serializarlos
+Crearemos la clase en PacketList y crearemos una clase para serializarla con los metodos Serialize y Deserialize
+Finalmente registramos el serializador en RegisterPacketListeners con:(SeralizeVector3.Serialize, SeralizeVector3.Deserialize);
+Esta manera se usara cuando queramos crearr un paquete de un tipo ya existente, al no poder alterar su definicion no podemos implementar INetSerializable
+
+Si definimos nosotros la clase bastara con implementar INetSerializable en la propia clase que usemos en el juego, no volver a crearla en packet list.
+Por ejemplo, si nuestro juego emplea la clase Cat, al implementar INetSerializable ya podremos enviarla tal cual.
+
+
+
+
+

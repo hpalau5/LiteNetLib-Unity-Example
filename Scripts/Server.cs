@@ -49,12 +49,19 @@ public class Server : MonoBehaviour
         {
             Debug.Log("Client connected: " + client);
             netPacketProcessorServer.Send(client, new WelcomePacket() { NumberValue = 1, StringValue = "Hola" }, DeliveryMethod.ReliableOrdered);
+            netPacketProcessorServer.Send(client, new PositionPacktet() { position= new Vector3(5,6,7) }, DeliveryMethod.ReliableOrdered);
         };
     }
 
     int hp = 100;
     public void RegisterPacketsListeners()
     {
+        //Registramos el serializador del nuevo tipo creado
+        netPacketProcessorServer.RegisterNestedType(SeralizeVector3.Serialize, SeralizeVector3.Deserialize);
+
+        //Registramos el serializador creado al implementar INetSerializar
+        netPacketProcessorServer.RegisterNestedType<Cat>(() => new Cat()); 
+
         //Crea el listener que se activara cuando se reciba un paquete de ese tipo
         netPacketProcessorServer.SubscribeReusable<HpPlayerDecreasedPacket>((packet) =>
         {

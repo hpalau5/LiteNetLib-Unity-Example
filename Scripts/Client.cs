@@ -46,7 +46,13 @@ public class Client : MonoBehaviour
     }
 
     public void RegisterPacketsListeners()
-    {
+    {       
+        //Registramos el serializador del nuevo tipo creado
+        netPacketProcessorClient.RegisterNestedType(SeralizeVector3.Serialize, SeralizeVector3.Deserialize);
+
+        //Registramos el serializador creado al implementar INetSerializar
+        netPacketProcessorClient.RegisterNestedType<Cat>(() => new Cat());
+
         //Crea el listener que se activara cuando se reciba un paquete de ese tipo
         netPacketProcessorClient.SubscribeReusable<WelcomePacket>((packet) =>
         {
@@ -58,6 +64,12 @@ public class Client : MonoBehaviour
         {
             Debug.Log("New hp received");
             Debug.Log(packet.NewHp);
+        });
+
+        netPacketProcessorClient.SubscribeReusable<PositionPacktet>((packet) =>
+        {
+            Debug.Log("New vector3 received");
+            Debug.Log(packet.position);
         });
     }
 
