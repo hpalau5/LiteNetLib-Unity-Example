@@ -1,12 +1,13 @@
-//Elegir arquitectura
-//Conexion entre clientes directa
-//Conexion a un servidor que transmita los datos
-//Conexion a un servidor que intenta conectarlos entre ellos, si no pueden hace de relay y transmite los datos entre ellos
-//Servidor autoritativo, solo se envian los inputs y el servidor los valida y maneja toda la logica
-//(los clientes pueden hacer la logica tmabien para ser mas responsible, pero la que mandara sera la del servidor)
+Falta:
+-Elegir arquitectura
+-Conexion entre clientes directa
+-Conexion a un servidor que transmita los datos
+-Conexion a un servidor que intenta conectarlos entre ellos, si no pueden hace de relay y transmite los datos entre ellos
+-Servidor autoritativo, solo se envian los inputs y el servidor los valida y maneja toda la logica
+-(los clientes pueden hacer la logica tmabien para ser mas responsible, pero la que mandara sera la del servidor)
 
 
- La arquitectura de scripts planteada sera:
+La arquitectura de scripts planteada sera:
 Clase cliente y clase servidor, son las que llevaran toda la logica de las conexiones
 Cuando se quiera enviar algo, se llamara a la clase cliente (singleton) y al metodo que envie ese dato
 Al recibir un dato, la clase cliente pondra el dato o llamara al metodo de la clase donde deberia estar
