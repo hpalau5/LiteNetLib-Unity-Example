@@ -63,15 +63,28 @@ public class Server : MonoBehaviour
         netPacketProcessorServer.RegisterNestedType<Cat>(() => new Cat()); 
 
         //Crea el listener que se activara cuando se reciba un paquete de ese tipo
-        netPacketProcessorServer.SubscribeReusable<HpPlayerDecreasedPacket>((packet) =>
+        netPacketProcessorServer.SubscribeReusable<HpPlayerDecreasedPacket, NetPeer>((packet, peer) =>
         {
-            //En este caso cada vez que recibamos este paquete, reenviaremos la nueva vida a todos los clientes
+            //En este caso cada vez que recibamos este paquete,
+            //reenviaremos la nueva vida a todos los clientes que no sean el que envio este paquete
             hp -= packet.DecreasedQuantity;
             HpPlayerChanged hpPacket = new HpPlayerChanged() { NewHp=hp };
-            netManagerServer.SendToAll(netPacketProcessorServer.Write(hpPacket), DeliveryMethod.ReliableOrdered);
+            SendToAllExceptSender(hpPacket, peer, DeliveryMethod.ReliableOrdered);
+            //podriamos reenviar el propio paquete recibido con 
+            //SendToAllExceptSender(packet, peer, DeliveryMethod.ReliableOrdered);
         });
     }
 
+    private void SendToAllExceptSender<T>(T packet, NetPeer peer, DeliveryMethod deliveryMethod) where T : class, new()
+    {
+        foreach (NetPeer sendPeer in netManagerServer.ConnectedPeerList)
+        {
+            if (sendPeer.Id == peer.Id)
+            {
+                netPacketProcessorServer.Send(sendPeer, packet, deliveryMethod);
+            }
+        }
+    }
     void Update()
     {
         netManagerServer.PollEvents();
